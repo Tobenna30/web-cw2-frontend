@@ -12,15 +12,15 @@
       <div>
         <label for="sort">Sort By:</label>
         <select id="sort" v-model="sortBy">
-          <option value="subject">Subject</option>
-          <option value="location">Location</option>
-          <option value="price">Price</option>
-          <option value="spaces">Spaces</option>
-        </select>
-        <select v-model="sortOrder">
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
+            <option value="subject">Subject</option>
+            <option value="location">Location</option>
+            <option value="price">Price</option>
+            <option value="spaces">Spaces</option>
+          </select>
+          <select v-model="sortOrder">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
         <button @click="goToCartPage">Shopping Cart</button>
       </div>
       <input v-model="searchTerm" @input="filterLessons" placeholder="Search Lessons...">
@@ -56,14 +56,15 @@
   </div>
 
   <script>
+    const eventBus = new Vue();
+
     const app = new Vue({
       el: '#app',
       data: {
         lessons: lessons, // Load lessons from the lessons.js file
         sortBy: 'subject',
-        sortOrder: 'asc',
-        searchTerm: '',
-    },
+        cart: [],
+      },
       computed: {
         sortedLessons() {
           return this.lessons.slice().sort((a, b) => {
@@ -94,24 +95,20 @@
           });
         },
       },
+
       methods: {
         addToCart(lesson) {
-    if (lesson.spaces > 0) {
-      lesson.spaces--;
-      const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingItem = cartItems.find(item => item.id === lesson.id);
-      if (!existingItem) {
-        cartItems.push({
-          id: lesson.id,
-          subject: lesson.subject,
-          location: lesson.location,
-          price: lesson.price,
-        });
-        localStorage.setItem('cart', JSON.stringify(cartItems));
-      }
-      this.$set(this, 'cart', cartItems); // Update cart data in Vue component
-    }
-  },
+          if (lesson.spaces > 0) {
+            lesson.spaces--;
+            this.cart.push({
+              id: lesson.id,
+              subject: lesson.subject,
+              location: lesson.location,
+              price: lesson.price,
+            });
+            eventBus.$emit('item-added', this.cart);
+          }
+        },
         goToCartPage() {
           document.getElementById('app').style.display = 'none';
           document.getElementById('cartApp').style.display = 'block';
@@ -121,14 +118,14 @@
         },
       },
     });
-    
+
     new Vue({
       el: '#cartApp',
       data: {
-        cart: [],
         name: '',
         phone: '',
         orderSubmitted: false,
+        cart: [],
       },
       mounted() {
         this.cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -140,22 +137,31 @@
       },
       methods: {
         removeFromCart(cartItem) {
-    this.cart = this.cart.filter(item => item.id !== cartItem.id);
-    localStorage.setItem('cart', JSON.stringify(this.cart));
+          this.cart = this.cart.filter(item => item !== cartItem);
+          localStorage.setItem('cart', JSON.stringify(this.cart));
 
-    const lessonToUpdate = this.lessons.find(lesson => lesson.id === cartItem.id);
-    if (lessonToUpdate) {
-      lessonToUpdate.spaces++;
-    }
-
-    localStorage.setItem('lessons', JSON.stringify(this.lessons));
-  },
+          // Add removed item back to the lessons
+          const availableLessons = JSON.parse(localStorage.getItem('lessons')) || [];
+          availableLessons.push(cartItem);
+          localStorage.setItem('lessons', JSON.stringify(availableLessons));
+          this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        },
         checkout() {
           if (this.validInput) {
             // Submit order (You can add logic here to send orders to a server, etc.)
             this.orderSubmitted = true;
           }
         },
+      },
+
+      created() {
+        eventBus.$on('item-added', cart => {
+          this.cart = cart;
+        });
+
+        eventBus.$on('item-removed', cart => {
+          this.cart = cart;
+        });
       },
     });
   </script>

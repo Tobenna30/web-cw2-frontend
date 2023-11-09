@@ -11,7 +11,7 @@ const lessons = [
       subject: 'Science',
       location: 'Lab B',
       price: 25,
-      spaces: 3,
+      spaces: 5,
     },
     // Add more lesson objects...
   ];
