@@ -95,7 +95,7 @@
         },
       },
       methods: {
-  addToCart(lesson) {
+        addToCart(lesson) {
     if (lesson.spaces > 0) {
       lesson.spaces--;
       const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -109,6 +109,7 @@
         });
         localStorage.setItem('cart', JSON.stringify(cartItems));
       }
+      this.$set(this, 'cart', cartItems); // Update cart data in Vue component
     }
   },
         goToCartPage() {
@@ -139,15 +140,16 @@
       },
       methods: {
         removeFromCart(cartItem) {
-          this.cart = this.cart.filter(item => item !== cartItem);
-          localStorage.setItem('cart', JSON.stringify(this.cart));
+    this.cart = this.cart.filter(item => item.id !== cartItem.id);
+    localStorage.setItem('cart', JSON.stringify(this.cart));
 
-          // Add removed item back to the lessons
-          const availableLessons = JSON.parse(localStorage.getItem('lessons')) || [];
-          availableLessons.push(cartItem);
-          localStorage.setItem('lessons', JSON.stringify(availableLessons));
-          this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-        },
+    const lessonToUpdate = this.lessons.find(lesson => lesson.id === cartItem.id);
+    if (lessonToUpdate) {
+      lessonToUpdate.spaces++;
+    }
+
+    localStorage.setItem('lessons', JSON.stringify(this.lessons));
+  },
         checkout() {
           if (this.validInput) {
             // Submit order (You can add logic here to send orders to a server, etc.)
