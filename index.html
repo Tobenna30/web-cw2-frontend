@@ -67,7 +67,20 @@
       },
       computed: {
         sortedLessons() {
-          // Existing sorting logic...
+          return this.lessons.slice().sort((a, b) => {
+            if (this.sortBy === 'subject' || this.sortBy === 'location') {
+              const nameA = a[this.sortBy].toUpperCase();
+              const nameB = b[this.sortBy].toUpperCase();
+              if (this.sortOrder === 'asc') {
+                return nameA.localeCompare(nameB);
+              } else {
+                return nameB.localeCompare(nameA);
+              }
+            } else {
+              const order = this.sortOrder === 'asc' ? 1 : -1;
+              return order * (a[this.sortBy] - b[this.sortBy]);
+            }
+          });
         },
         filteredLessons() {
           // Existing filtering logic...
