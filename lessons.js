@@ -1,12 +1,21 @@
-export const lessons = [
+const lessons = [
     {
       id: 1,
-      subject: 'Mathematics',
+      subject: 'Math',
       location: 'Room A',
       price: 20,
       spaces: 5,
-      icon: 'fa-book',
     },
-    // More lesson objects...
+    {
+      id: 2,
+      subject: 'Science',
+      location: 'Lab B',
+      price: 25,
+      spaces: 3,
+    },
+    // Add more lesson objects...
   ];
+  
+  // Store lessons in localStorage
+  localStorage.setItem('lessons', JSON.stringify(lessons));
   
