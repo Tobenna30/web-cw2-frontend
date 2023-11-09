@@ -5,7 +5,6 @@
   <title>After School Activities</title>
   <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
   <script src="lessons.js"></script>
-
 </head>
 <body>
   <div id="app">
@@ -60,10 +59,11 @@
     const app = new Vue({
       el: '#app',
       data: {
+        lessons: lessons, // Load lessons from the lessons.js file
         sortBy: 'subject',
         sortOrder: 'asc',
         searchTerm: '',
-      },
+    },
       computed: {
         sortedLessons() {
           return this.lessons.slice().sort((a, b) => {
@@ -95,19 +95,22 @@
         },
       },
       methods: {
-        addToCart(lesson) {
-          if (lesson.spaces > 0) {
-            lesson.spaces--;
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            cartItems.push({
-              id: lesson.id,
-              subject: lesson.subject,
-              location: lesson.location,
-              price: lesson.price,
-            });
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-          }
-        },
+  addToCart(lesson) {
+    if (lesson.spaces > 0) {
+      lesson.spaces--;
+      const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cartItems.find(item => item.id === lesson.id);
+      if (!existingItem) {
+        cartItems.push({
+          id: lesson.id,
+          subject: lesson.subject,
+          location: lesson.location,
+          price: lesson.price,
+        });
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+      }
+    }
+  },
         goToCartPage() {
           document.getElementById('app').style.display = 'none';
           document.getElementById('cartApp').style.display = 'block';
@@ -117,7 +120,7 @@
         },
       },
     });
-
+    
     new Vue({
       el: '#cartApp',
       data: {
@@ -155,7 +158,7 @@
     });
   </script>
 
-  <style>
+<style>
     .lesson {
       border: 1px solid #ccc;
       padding: 10px;
