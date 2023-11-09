@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>After School Activities</title>
+  <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div>
+      <div>
+        <label for="sort">Sort By:</label>
+        <select id="sort" v-model="sortBy">
+          <option value="subject">Subject</option>
+          <option value="location">Location</option>
+          <option value="price">Price</option>
+          <option value="spaces">Spaces</option>
+        </select>
+        <select v-model="sortOrder">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+        <button @click="goToCartPage">Shopping Cart</button>
+      </div>
+      <input v-model="searchTerm" @input="filterLessons" placeholder="Search Lessons...">
+      <div>
+        <div v-for="lesson in filteredLessons" :key="lesson.id">
+          <div class="lesson">
+            <p>Subject: {{ lesson.subject }}</p>
+            <p>Location: {{ lesson.location }}</p>
+            <p>Price: ${{ lesson.price }}</p>
+            <p>Spaces: {{ lesson.spaces }}</p>
+            <button @click="addToCart(lesson)" :disabled="lesson.spaces === 0">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        lessons: [
+           // ... (previous lesson objects)
+// New lesson objects
+{
+  id: 5,
+  subject: 'Dance',
+  location: 'Dance Studio E',
+  price: 30,
+  spaces: 4,
+  icon: 'fa-dancer',
+},
+{
+  id: 6,
+  subject: 'Coding',
+  location: 'Computer Lab F',
+  price: 22,
+  spaces: 7,
+  icon: 'fa-laptop-code',
+},
+{
+  id: 7,
+  subject: 'Cooking',
+  location: 'Kitchen G',
+  price: 18,
+  spaces: 6,
+  icon: 'fa-utensils',
+},
+{
+  id: 8,
+  subject: 'Sports',
+  location: 'Sports Field H',
+  price: 25,
+  spaces: 3,
+  icon: 'fa-futbol',
+},
+// Add more lesson objects...
+
+        ],
+        sortBy: 'subject',
+        sortOrder: 'asc',
+        searchTerm: '',
+      },
+      computed: {
+        sortedLessons() {
+          return this.lessons.slice().sort((a, b) => {
+            if (this.sortBy === 'subject' || this.sortBy === 'location') {
+              const nameA = a[this.sortBy].toUpperCase();
+              const nameB = b[this.sortBy].toUpperCase();
+              if (this.sortOrder === 'asc') {
+                return nameA.localeCompare(nameB);
+              } else {
+                return nameB.localeCompare(nameA);
+              }
+            } else {
+              const order = this.sortOrder === 'asc' ? 1 : -1;
+              return order * (a[this.sortBy] - b[this.sortBy]);
+            }
+          });
+        },
+        filteredLessons() {
+          if (!this.searchTerm) {
+            return this.sortedLessons;
+          }
+          const search = this.searchTerm.toLowerCase();
+          return this.sortedLessons.filter(lesson => {
+            return (
+              lesson.subject.toLowerCase().includes(search) ||
+              lesson.location.toLowerCase().includes(search)
+            );
+          });
+        },
+      },
+      methods: {
+        addToCart(lesson) {
+          if (lesson.spaces > 0) {
+            lesson.spaces--;
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems.push({
+              id: lesson.id,
+              subject: lesson.subject,
+              location: lesson.location,
+              price: lesson.price,
+            });
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+          }
+        },
+        goToCartPage() {
+          window.location.href = 'cart.html';
+        },
+        filterLessons() {
+          // Function is reactive to input changes, no code required here.
+        },
+      },
+    });
+  </script>
+
+  <style>
+    .lesson {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</body>
+</html>
