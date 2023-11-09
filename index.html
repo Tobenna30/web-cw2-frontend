@@ -97,7 +97,17 @@
       },
       methods: {
         addToCart(lesson) {
-          // Existing logic to add to cart...
+          if (lesson.spaces > 0) {
+            lesson.spaces--;
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems.push({
+              id: lesson.id,
+              subject: lesson.subject,
+              location: lesson.location,
+              price: lesson.price,
+            });
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+          }
         },
         goToCartPage() {
           document.getElementById('app').style.display = 'none';
