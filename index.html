@@ -83,7 +83,16 @@
           });
         },
         filteredLessons() {
-          // Existing filtering logic...
+          if (!this.searchTerm) {
+            return this.sortedLessons;
+          }
+          const search = this.searchTerm.toLowerCase();
+          return this.sortedLessons.filter(lesson => {
+            return (
+              lesson.subject.toLowerCase().includes(search) ||
+              lesson.location.toLowerCase().includes(search)
+            );
+          });
         },
       },
       methods: {
