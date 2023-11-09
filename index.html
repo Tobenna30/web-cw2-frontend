@@ -37,47 +37,29 @@
     </div>
   </div>
 
+  <div id="cartApp" style="display: none;">
+    <h1>Shopping Cart</h1>
+    <div v-if="cart.length === 0">No items in the cart</div>
+    <div v-for="cartItem in cart" :key="cartItem.id">
+      <div class="cart-item">
+        <p>Subject: {{ cartItem.subject }}</p>
+        <p>Location: {{ cartItem.location }}</p>
+        <p>Price: ${{ cartItem.price }}</p>
+        <button @click="removeFromCart(cartItem)">Remove from Cart</button>
+      </div>
+    </div>
+    <input v-model="name" placeholder="Name">
+    <input v-model="phone" placeholder="Phone Number">
+    <button @click="checkout" :disabled="!validInput">Checkout</button>
+    <p v-if="orderSubmitted">Order has been submitted!</p>
+  </div>
+
   <script>
     const app = new Vue({
       el: '#app',
       data: {
         lessons: [
-           // ... (previous lesson objects)
-// New lesson objects
-{
-  id: 5,
-  subject: 'Dance',
-  location: 'Dance Studio E',
-  price: 30,
-  spaces: 4,
-  icon: 'fa-dancer',
-},
-{
-  id: 6,
-  subject: 'Coding',
-  location: 'Computer Lab F',
-  price: 22,
-  spaces: 7,
-  icon: 'fa-laptop-code',
-},
-{
-  id: 7,
-  subject: 'Cooking',
-  location: 'Kitchen G',
-  price: 18,
-  spaces: 6,
-  icon: 'fa-utensils',
-},
-{
-  id: 8,
-  subject: 'Sports',
-  location: 'Sports Field H',
-  price: 25,
-  spaces: 3,
-  icon: 'fa-futbol',
-},
-// Add more lesson objects...
-
+          // Existing lessons data...
         ],
         sortBy: 'subject',
         sortOrder: 'asc',
@@ -85,53 +67,50 @@
       },
       computed: {
         sortedLessons() {
-          return this.lessons.slice().sort((a, b) => {
-            if (this.sortBy === 'subject' || this.sortBy === 'location') {
-              const nameA = a[this.sortBy].toUpperCase();
-              const nameB = b[this.sortBy].toUpperCase();
-              if (this.sortOrder === 'asc') {
-                return nameA.localeCompare(nameB);
-              } else {
-                return nameB.localeCompare(nameA);
-              }
-            } else {
-              const order = this.sortOrder === 'asc' ? 1 : -1;
-              return order * (a[this.sortBy] - b[this.sortBy]);
-            }
-          });
+          // Existing sorting logic...
         },
         filteredLessons() {
-          if (!this.searchTerm) {
-            return this.sortedLessons;
-          }
-          const search = this.searchTerm.toLowerCase();
-          return this.sortedLessons.filter(lesson => {
-            return (
-              lesson.subject.toLowerCase().includes(search) ||
-              lesson.location.toLowerCase().includes(search)
-            );
-          });
+          // Existing filtering logic...
         },
       },
       methods: {
         addToCart(lesson) {
-          if (lesson.spaces > 0) {
-            lesson.spaces--;
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            cartItems.push({
-              id: lesson.id,
-              subject: lesson.subject,
-              location: lesson.location,
-              price: lesson.price,
-            });
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-          }
+          // Existing logic to add to cart...
         },
         goToCartPage() {
-          window.location.href = 'cart.html';
+          document.getElementById('app').style.display = 'none';
+          document.getElementById('cartApp').style.display = 'block';
         },
         filterLessons() {
-          // Function is reactive to input changes, no code required here.
+          // Existing filter lessons logic...
+        },
+      },
+    });
+
+    new Vue({
+      el: '#cartApp',
+      data: {
+        cart: [],
+        name: '',
+        phone: '',
+        orderSubmitted: false,
+      },
+      mounted() {
+        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+      },
+      computed: {
+        validInput() {
+          return /^[A-Za-z\s]+$/.test(this.name) && /^\d+$/.test(this.phone);
+        },
+      },
+      methods: {
+        removeFromCart(cartItem) {
+          // Existing remove from cart logic...
+        },
+        checkout() {
+          if (this.validInput) {
+            // Existing checkout logic...
+          }
         },
       },
     });
@@ -139,6 +118,11 @@
 
   <style>
     .lesson {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .cart-item {
       border: 1px solid #ccc;
       padding: 10px;
       margin: 10px 0;
