@@ -114,7 +114,7 @@
           document.getElementById('cartApp').style.display = 'block';
         },
         filterLessons() {
-          // Existing filter lessons logic...
+          // Function is reactive to input changes, no code required here.
         },
       },
     });
@@ -137,11 +137,19 @@
       },
       methods: {
         removeFromCart(cartItem) {
-          // Existing remove from cart logic...
+          this.cart = this.cart.filter(item => item !== cartItem);
+          localStorage.setItem('cart', JSON.stringify(this.cart));
+
+          // Add removed item back to the lessons
+          const availableLessons = JSON.parse(localStorage.getItem('lessons')) || [];
+          availableLessons.push(cartItem);
+          localStorage.setItem('lessons', JSON.stringify(availableLessons));
+          this.cart = JSON.parse(localStorage.getItem('cart')) || [];
         },
         checkout() {
           if (this.validInput) {
-            // Existing checkout logic...
+            // Submit order (You can add logic here to send orders to a server, etc.)
+            this.orderSubmitted = true;
           }
         },
       },
