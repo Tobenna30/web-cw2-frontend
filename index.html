@@ -28,16 +28,15 @@
       <input v-model="searchTerm" @input="filterLessons" placeholder="Search Lessons...">
       <div>
         <div v-for="lesson in filteredLessons" :key="lesson.id">
-          <div class="lesson">
-           
-            <i class="fas fa-book"></i>
-            <p>Subject: {{ lesson.subject }}</p>
-            <p>Location: {{ lesson.location }}</p>
-            <p>Price: ${{ lesson.price }}</p>
-            <p>Spaces: {{ lesson.spaces }}</p>
-            <button @click="addToCart(lesson)" :disabled="lesson.spaces === 0">Add to Cart</button>
-          </div>
-        </div>
+            <div class="lesson">
+              <i :class="['fas', lesson.icon]"></i> <!-- Dynamic class binding for the icon -->
+              <p>Subject: {{ lesson.subject }}</p>
+              <p>Location: {{ lesson.location }}</p>
+              <p>Price: ${{ lesson.price }}</p>
+              <p>Spaces: {{ lesson.spaces }}</p>
+              <button @click="addToCart(lesson)" :disabled="lesson.spaces === 0">Add to Cart</button>
+            </div>
+          </div>          
       </div>
     </div>
   </div>
@@ -49,13 +48,14 @@
     </div>
     <div v-if="cart.length === 0">No items in the cart</div>
     <div v-for="cartItem in cart" :key="cartItem.id">
-      <div class="cart-item">
-        <p>Subject: {{ cartItem.subject }}</p>
-        <p>Location: {{ cartItem.location }}</p>
-        <p>Price: ${{ cartItem.price }}</p>
-        <button @click="removeFromCart(cartItem)">Remove from Cart</button>
+        <div class="cart-item">
+          <i :class="['fas', cartItem.icon]"></i> <!-- Dynamic class binding for the icon -->
+          <p>Subject: {{ cartItem.subject }}</p>
+          <p>Location: {{ cartItem.location }}</p>
+          <p>Price: ${{ cartItem.price }}</p>
+          <button @click="removeFromCart(cartItem)">Remove from Cart</button>
+        </div>
       </div>
-    </div>
     <input v-model="name" placeholder="Name">
     <input v-model="phone" placeholder="Phone Number">
     <button @click="checkout" :disabled="!validInput">Checkout</button>
@@ -107,17 +107,18 @@ const app = new Vue({
   },
   methods: {
     addToCart(lesson) {
-      if (lesson.spaces > 0) {
-        lesson.spaces--;
-        this.cart.push({
-          id: lesson.id,
-          subject: lesson.subject,
-          location: lesson.location,
-          price: lesson.price,
-        });
-        eventBus.$emit('item-added', this.cart);
-      }
-    },
+  if (lesson.spaces > 0) {
+    lesson.spaces--;
+    this.cart.push({
+      id: lesson.id,
+      subject: lesson.subject,
+      location: lesson.location,
+      price: lesson.price,
+      icon: lesson.icon, // Include the icon property in the cart item
+    });
+    eventBus.$emit('item-added', this.cart);
+  }
+},
     toggleCartPage() {
       const cartApp = document.getElementById('cartApp');
       if (cartApp.style.display === 'none') {
