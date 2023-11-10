@@ -74,11 +74,11 @@ const lessons = [
     },
     {
       id: 10,
-      subject: 'Dance',
-      location: 'Studio C',
+      subject: 'Film',
+      location: 'Theare A',
       price: 45,
       spaces: 5,
-      icon: 'fa-dance', 
+      icon: 'fa-film', 
     },
   ];
   
