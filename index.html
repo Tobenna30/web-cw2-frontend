@@ -63,7 +63,9 @@
       data: {
         lessons: lessons, // Load lessons from the lessons.js file
         sortBy: 'subject',
-        cart: [],
+        sortOrder: 'asc',
+        searchTerm: '',
+        cart: [], // Initialize cart data
       },
       computed: {
         sortedLessons() {
