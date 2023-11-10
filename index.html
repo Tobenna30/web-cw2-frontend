@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>After School Activities</title>
   <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="lessons.js"></script>
 </head>
 <body>
@@ -27,6 +29,8 @@
       <div>
         <div v-for="lesson in filteredLessons" :key="lesson.id">
           <div class="lesson">
+           
+            <i class="fas fa-book"></i>
             <p>Subject: {{ lesson.subject }}</p>
             <p>Location: {{ lesson.location }}</p>
             <p>Price: ${{ lesson.price }}</p>
@@ -41,7 +45,7 @@
   <div id="cartApp" style="display: none;">
     <h1>Shopping Cart</h1>
     <div>
-      <button @click="toggleCartPage">Back to Lessons</button>
+      <button @click="toggleCartPage">Shopping Cart</button>
     </div>
     <div v-if="cart.length === 0">No items in the cart</div>
     <div v-for="cartItem in cart" :key="cartItem.id">
@@ -125,7 +129,7 @@ const app = new Vue({
       }
     },
     filterLessons() {
-      // Function is reactive to input changes, no code required here.
+      
     },
   },
 });
@@ -160,13 +164,13 @@ const app = new Vue({
         lessonToUpdate.spaces++;
       }
 
-      // Emitting the event to inform other components about the update in the cart
+      
       eventBus.$emit('item-removed', this.cart);
     }
   },
         checkout() {
           if (this.validInput) {
-            // Submit order (You can add logic here to send orders to a server, etc.)
+          
             this.orderSubmitted = true;
           }
         },
