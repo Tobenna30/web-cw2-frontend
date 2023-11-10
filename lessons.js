@@ -62,6 +62,13 @@ const lessons = [
       price: 26,
       spaces: 5,
     },
+    {
+        id: 10,
+        subject: 'Dance',
+        location: 'Studio C',
+        price: 45,
+        spaces: 5,
+      },
   ];
   
   // Store lessons in localStorage
