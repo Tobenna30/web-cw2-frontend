@@ -1,3 +1,4 @@
+
 const lessons = [
     {
       id: 1,
@@ -5,6 +6,7 @@ const lessons = [
       location: 'Room A',
       price: 20,
       spaces: 5,
+      icon: 'fa-calculator', 
     },
     {
       id: 2,
@@ -12,6 +14,7 @@ const lessons = [
       location: 'Lab B',
       price: 25,
       spaces: 5,
+      icon: 'fa-flask', 
     },
     {
       id: 3,
@@ -19,6 +22,7 @@ const lessons = [
       location: 'Room C',
       price: 15,
       spaces: 5,
+      icon: 'fa-book', 
     },
     {
       id: 4,
@@ -26,6 +30,7 @@ const lessons = [
       location: 'Room D',
       price: 18,
       spaces: 5,
+      icon: 'fa-book-open', 
     },
     {
       id: 5,
@@ -33,6 +38,7 @@ const lessons = [
       location: 'Studio A',
       price: 30,
       spaces: 5,
+      icon: 'fa-paint-brush',
     },
     {
       id: 6,
@@ -40,6 +46,7 @@ const lessons = [
       location: 'Studio B',
       price: 22,
       spaces: 5,
+      icon: 'fa-music', 
     },
     {
       id: 7,
@@ -47,6 +54,7 @@ const lessons = [
       location: 'Field',
       price: 17,
       spaces: 5,
+      icon: 'fa-running', 
     },
     {
       id: 8,
@@ -54,6 +62,7 @@ const lessons = [
       location: 'Lab C',
       price: 28,
       spaces: 5,
+      icon: 'fa-laptop-code', 
     },
     {
       id: 9,
@@ -61,16 +70,17 @@ const lessons = [
       location: 'Lab D',
       price: 26,
       spaces: 5,
+      icon: 'fa-microscope', 
     },
     {
-        id: 10,
-        subject: 'Dance',
-        location: 'Studio C',
-        price: 45,
-        spaces: 5,
-      },
+      id: 10,
+      subject: 'Dance',
+      location: 'Studio C',
+      price: 45,
+      spaces: 5,
+      icon: 'fa-dance', 
+    },
   ];
   
-  // Store lessons in localStorage
-  localStorage.setItem('lessons', JSON.stringify(lessons));
+ 
   
