@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>After School Activities</title>
+  <title>Individual Demonstration Booking System</title>
   <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -12,6 +12,7 @@
   <div id="app">
     <div>
       <div>
+        <h1>Individual Demonstration Booking System</h1>
         <label for="sort">Sort By:</label>
         <select id="sort" v-model="sortBy">
           <option value="subject">Subject</option>
@@ -29,7 +30,7 @@
       <div>
         <div v-for="lesson in filteredLessons" :key="lesson.id">
             <div class="lesson">
-              <i :class="['fas', lesson.icon]"></i> <!-- Dynamic class binding for the icon -->
+              <i :class="['fas', lesson.icon]"></i> 
               <p>Subject: {{ lesson.subject }}</p>
               <p>Location: {{ lesson.location }}</p>
               <p>Price: ${{ lesson.price }}</p>
@@ -49,7 +50,7 @@
     <div v-if="cart.length === 0">No items in the cart</div>
     <div v-for="cartItem in cart" :key="cartItem.id">
         <div class="cart-item">
-          <i :class="['fas', cartItem.icon]"></i> <!-- Dynamic class binding for the icon -->
+          <i :class="['fas', cartItem.icon]"></i> 
           <p>Subject: {{ cartItem.subject }}</p>
           <p>Location: {{ cartItem.location }}</p>
           <p>Price: ${{ cartItem.price }}</p>
@@ -63,13 +64,13 @@
   </div>
 
   <script>
-    // Vue instance for Lesson Page
+  
     const eventBus = new Vue();
 
 const app = new Vue({
   el: '#app',
   data: {
-    lessons: lessons, // Load lessons from the lessons.js file
+    lessons: lessons, 
     sortBy: 'subject',
     sortOrder: 'asc',
     searchTerm: '',
@@ -114,7 +115,7 @@ const app = new Vue({
       subject: lesson.subject,
       location: lesson.location,
       price: lesson.price,
-      icon: lesson.icon, // Include the icon property in the cart item
+      icon: lesson.icon, 
     });
     eventBus.$emit('item-added', this.cart);
   }
@@ -135,7 +136,7 @@ const app = new Vue({
   },
 });
 
-    // Vue instance for Cart Page
+  
     new Vue({
       el: '#cartApp',
       data: {
