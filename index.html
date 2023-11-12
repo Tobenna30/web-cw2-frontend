@@ -145,9 +145,7 @@ const app = new Vue({
         orderSubmitted: false,
         cart: [],
       },
-      mounted() {
-        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-      },
+      
       computed: {
         validInput() {
           return /^[A-Za-z\s]+$/.test(this.name) && /^\d+$/.test(this.phone);
@@ -155,11 +153,10 @@ const app = new Vue({
       },
       methods: {
         removeFromCart(cartItem) {
-    const removedIndex = this.cart.findIndex(item => item.id === cartItem.id);
-    if (removedIndex !== -1) {
-      const removedLesson = this.cart[removedIndex];
-      this.cart.splice(removedIndex, 1);
-      localStorage.setItem('cart', JSON.stringify(this.cart));
+      const removedIndex = this.cart.findIndex(item => item.id === cartItem.id);
+      if (removedIndex !== -1) {
+        const removedLesson = this.cart[removedIndex];
+        this.cart.splice(removedIndex, 1);
 
       const lessonToUpdate = lessons.find(lesson => lesson.id === removedLesson.id);
       if (lessonToUpdate) {
