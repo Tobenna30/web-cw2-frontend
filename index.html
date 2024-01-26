@@ -6,7 +6,7 @@
   <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="lessons.js"></script>
+  <!-- <script src="lessons.js"></script> -->
 </head>
 <body>
   <div id="app">
@@ -67,32 +67,66 @@
   
     const eventBus = new Vue();
 
-const app = new Vue({
+const webstore = new Vue({
   el: '#app',
   data: {
-    lessons: lessons, 
+    lessons: [],
+    // lessons: lessons, 
     sortBy: 'subject',
     sortOrder: 'asc',
     searchTerm: '',
     cart: [],
   },
+
+  created: function () {
+    // fetch("http://localhost:3000/collections/lessons").then(
+    //   function (response) {
+    //     response.text().then(
+    //       function (text) {
+    //         alert(text);
+    //       }
+    //     )
+    //   }
+    // )
+
+    fetch("http://localhost:3000/collections/lessons").then(
+      function (response) {
+        response.json().then(
+          function (json) {
+            // alert(json);
+            // console.log(json);
+            webstore.lessons = json;
+          }
+        )
+      }
+    )
+  },
+
   computed: {
     sortedLessons() {
-      return this.lessons.slice().sort((a, b) => {
-        if (this.sortBy === 'subject' || this.sortBy === 'location') {
-          const nameA = a[this.sortBy].toUpperCase();
-          const nameB = b[this.sortBy].toUpperCase();
-          if (this.sortOrder === 'asc') {
-            return nameA.localeCompare(nameB);
-          } else {
-            return nameB.localeCompare(nameA);
-          }
-        } else {
-          const order = this.sortOrder === 'asc' ? 1 : -1;
-          return order * (a[this.sortBy] - b[this.sortBy]);
-        }
-      });
-    },
+  return this.lessons.slice().sort((a, b) => {
+    if (
+      (this.sortBy === 'subject' || this.sortBy === 'location') &&
+      a[this.sortBy] &&
+      b[this.sortBy]
+    ) {
+      const nameA = a[this.sortBy].toUpperCase();
+      const nameB = b[this.sortBy].toUpperCase();
+      if (this.sortOrder === 'asc') {
+        return nameA.localeCompare(nameB);
+      } else {
+        return nameB.localeCompare(nameA);
+      }
+    } else if (a[this.sortBy] && !b[this.sortBy]) {
+      return -1;
+    } else if (!a[this.sortBy] && b[this.sortBy]) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+},
+
     filteredLessons() {
       if (!this.searchTerm) {
         return this.sortedLessons;
