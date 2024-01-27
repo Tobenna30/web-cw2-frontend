@@ -26,6 +26,11 @@
         </select>
         <button @click="toggleCartPage" :disabled="cart.length === 0">Shopping Cart</button>
       </div>
+
+      <button @click="saveProductToDB">
+        <span class="fas fa-save"></span>
+        TestSave a product
+    </button>
       <input v-model="searchTerm" @input="filterLessons" placeholder="Search Lessons...">
       <div>
         <div v-for="lesson in filteredLessons" :key="lesson.id">
@@ -37,7 +42,8 @@
               <p>Spaces: {{ lesson.spaces }}</p>
               <button @click="addToCart(lesson)" :disabled="lesson.spaces === 0">Add to Cart</button>
             </div>
-          </div>          
+          </div>   
+          
       </div>
     </div>
   </div>
@@ -89,7 +95,8 @@ const webstore = new Vue({
     //   }
     // )
 
-    fetch("http://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
+    // fetch("http://localhost:3000/collections/lessons").then(
+    fetch("http://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons").then(  
       function (response) {
         response.json().then(
           function (json) {
@@ -167,6 +174,44 @@ const webstore = new Vue({
     filterLessons() {
       
     },
+    saveProductToDB() {
+      const newProduct = {
+        "id": 1,
+        "subject": "Science",
+        "location": "Lab B",
+        "price": 25,
+        "spaces": 5,
+        "icon": "fa-flask"
+      }
+
+      fetch("http://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(newProduct),
+})
+  .then((response) => {
+    if (response.ok) {
+      // Check if the response status is OK (e.g., 200 or 201)
+      return response.json(); // Parse the JSON response
+    } 
+  })
+  .then((json) => {
+    alert("Success: Product saved to the database");
+    console.log("Success: Product saved to the database", json);
+
+    // Optionally, you can update your frontend data or UI as needed
+    webstore.lessons.push(newProduct);
+  })
+  .catch((error) => {
+    console.error("Error saving product:", error);
+    alert("Error: Failed to save product to the database");
+  });
+
+
+    }
+
   },
 });
 
