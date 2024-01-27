@@ -96,7 +96,7 @@ const webstore = new Vue({
     // )
 
     // fetch("http://localhost:3000/collections/lessons").then(
-    fetch("http://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons").then(  
+    fetch("https://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons").then(  
       function (response) {
         response.json().then(
           function (json) {
@@ -184,7 +184,7 @@ const webstore = new Vue({
         "icon": "fa-flask"
       }
 
-      fetch("http://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons", {
+      fetch("https://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
