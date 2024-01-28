@@ -43,6 +43,7 @@
               <p>Price: ${{ lesson.price }}</p>
               <p>Spaces: {{ lesson.spaces }}</p>
               <button @click="addToCart(lesson)" :disabled="lesson.spaces === 0">Add to Cart</button>
+
             </div>
           </div>   
           
@@ -153,18 +154,22 @@ const webstore = new Vue({
   },
   methods: {
     addToCart(lesson) {
-        if (lesson.spaces > 0) {
-            this.updateLessonSpace(lesson._id);
-            this.cart.push({
-                id: lesson.id,
-                subject: lesson.subject,
-                location: lesson.location,
-                price: lesson.price,
-                icon: lesson.icon, 
-            });
-            eventBus.$emit('item-added', this.cart);
-        }
-    },
+    if (lesson.spaces > 0) {
+        // Decrease the lesson space
+        lesson.spaces--;
+        
+        // Add the lesson to the cart
+        this.cart.push({
+            id: lesson.id,
+            subject: lesson.subject,
+            location: lesson.location,
+            price: lesson.price,
+            icon: lesson.icon, 
+        });
+        eventBus.$emit('item-added', this.cart);
+    }
+},
+
     //  fetch that updates the available lesson space with PUT after an order is submitted
     updateLessonSpace(lessonId) {
     console.log('Lesson ID:', lessonId); // Log the lessonId to the console for debugging
@@ -179,6 +184,8 @@ const webstore = new Vue({
     }).catch(error => {
         console.error('Error:', error);
     });
+
+  
 },
 
 // fetch to send the search information to the Back-End.
