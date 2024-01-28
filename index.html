@@ -12,6 +12,8 @@
   <div id="app">
     <div>
       <div>
+        <img src="/backend/lesson-images/welcome.jpeg" alt="Welcome Image">
+
         <h1>Individual Demonstration Booking System</h1>
         <label for="sort">Sort By:</label>
         <select id="sort" v-model="sortBy">
@@ -83,6 +85,7 @@ const webstore = new Vue({
     searchTerm: '',
     cart: [],
   },
+  
 
   created: function () {
     // fetch("http://localhost:3000/collections/lessons").then(
@@ -95,6 +98,7 @@ const webstore = new Vue({
     //   }
     // )
 
+    //  fetch that retrieves all the lessons with GET
     // fetch("http://localhost:3000/collections/lessons").then(
     fetch("https://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons").then(  
       function (response) {
@@ -149,18 +153,46 @@ const webstore = new Vue({
   },
   methods: {
     addToCart(lesson) {
-  if (lesson.spaces > 0) {
-    lesson.spaces--;
-    this.cart.push({
-      id: lesson.id,
-      subject: lesson.subject,
-      location: lesson.location,
-      price: lesson.price,
-      icon: lesson.icon, 
+        if (lesson.spaces > 0) {
+            this.updateLessonSpace(lesson._id);
+            this.cart.push({
+                id: lesson.id,
+                subject: lesson.subject,
+                location: lesson.location,
+                price: lesson.price,
+                icon: lesson.icon, 
+            });
+            eventBus.$emit('item-added', this.cart);
+        }
+    },
+    //  fetch that updates the available lesson space with PUT after an order is submitted
+    updateLessonSpace(lessonId) {
+    console.log('Lesson ID:', lessonId); // Log the lessonId to the console for debugging
+
+    fetch(`https://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/lessons/${lessonId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update lesson space');
+        }
+    }).catch(error => {
+        console.error('Error:', error);
     });
-    eventBus.$emit('item-added', this.cart);
-  }
 },
+
+// fetch to send the search information to the Back-End.
+    searchLessons() {
+      fetch(`https://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/search?term=${this.searchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+          this.lessons = data;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    },
+
     toggleCartPage() {
       const cartApp = document.getElementById('cartApp');
       if (cartApp.style.display === 'none') {
@@ -246,12 +278,35 @@ const webstore = new Vue({
       eventBus.$emit('item-removed', this.cart);
     }
   },
-        checkout() {
-          if (this.validInput) {
-          
+  checkout() {
+    if (this.validInput) {
+        const order = {
+            name: this.name,
+            phone: this.phone,
+            lessonIDs: this.cart.map(item => item.id),
+            numberOfSpace: this.cart.length
+        };
+       // fetch that saves a new order with POST after it is submitted
+        fetch('https://lesseonapp3-env.eba-mwhmmtep.eu-west-2.elasticbeanstalk.com/collections/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(order)
+        }).then(response => {
+            if (response.ok) {
+                return response.json(); // Parse the JSON response if successful
+            } 
+        }).then(json => {
+            alert("Success: Order placed successfully!");
+            console.log("Success: Order placed successfully", json);
             this.orderSubmitted = true;
-          }
-        },
+            this.cart = []; // Clear the cart
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Error: Failed to place order');
+        });
+    }
+},
+
         toggleCartPage() {
           const cartApp = document.getElementById('cartApp');
           if (cartApp.style.display === 'none') {
